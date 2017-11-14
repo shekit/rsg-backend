@@ -33,7 +33,7 @@ io.on('connection', function(socket){
     console.log("RECEIVED NAME:", data.name);
 
 
-    if(submitted > profileImages.length){
+    if(submitted >= profileImages.length){
       submitted = 0;
     } 
 
