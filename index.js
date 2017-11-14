@@ -140,7 +140,9 @@ io.on('connection', function(socket){
     var standing = []
 
     for(var id in connectedClients){
-      standing.push(connectedClients[id]);
+      if(connectedClients[id].finished){
+        standing.push(connectedClients[id]);
+      }
     }
 
     //sort in descending
