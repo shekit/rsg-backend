@@ -12,7 +12,7 @@ var DEVELOPMENT = true; // change this
 var connectedClients = {};
 
 if(DEVELOPMENT){
-  connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Enemy", ready: false, points: 4000}};
+  connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Enemy", ready: true, finished: true,points: 4000, time:"3:04"}};
 }
 
 var competitorsReady = 0;
@@ -31,6 +31,7 @@ io.on('connection', function(socket){
     var competitorObj = {
       name: data.name,
       ready: false,
+      finished: false,
       points: 0
     }
     connectedClients[socket.id] = competitorObj;
@@ -39,18 +40,16 @@ io.on('connection', function(socket){
 
   socket.on('competitors', function(){
     console.log("send competitors");
-    if(Object.keys(connectedClients).length == 1){
-      // make unity repeat the socket call
-      socket.emit('no-competitors');
-    } else {
-      var competitorNames = [];
+    
+    var competitorNames = [];
 
-      for(var id in connectedClients){
-        if(id != socket.id){
-          competitorNames.push(connectedClients[id].name);
-        }
+    for(var id in connectedClients){
+      if(id != socket.id){
+        competitorNames.push(connectedClients[id].name);
       }
+    }
 
+    if(competitorNames.length > 0){
       io.emit('competitors', {"competitors":competitorNames});
     }
 
@@ -59,40 +58,55 @@ io.on('connection', function(socket){
   socket.on('ready', function(){
     connectedClients[socket.id].ready = true; 
 
-    competitorsReady++;
+    //competitorsReady++;
 
-    var readyLength = 0;
+    var ready = 0;
 
-    if(DEVELOPMENT){
-      readyLength = Object.keys(connectedClients).length-1;
-    } else {
-      readyLength = Object.keys(connectedClients).length;
+    for(var c in connectedClients){
+      if(connectedClients[c].ready){
+        ready++;
+      }
     }
 
-    if(competitorsReady == readyLength){
+    // var readyLength = 0;
+
+    // if(DEVELOPMENT){
+    //   readyLength = Object.keys(connectedClients).length-1;
+    //   console.log("READDYY")
+    // } else {
+    //   readyLength = Object.keys(connectedClients).length;
+    // }
+
+    if(ready == Object.keys(connectedClients).length){
       io.emit("start-race");
     } 
     
 
   })
 
-  socket.on('finish', function(points){
-    connectedClients[socket.id].points = points;
-    competitorsFinished++;
+  socket.on('finish', function(data){
+    connectedClients[socket.id].points = parseInt(data.points);
+    connectedClients[socket.id].time = data.time;
+    connectedClients[socket.id].finished = true;
 
-    if(DEVELOPMENT){
-      readyLength = Object.keys(connectedClients).length-1;
-    } else {
-      readyLength = Object.keys(connectedClients).length;
+    var finished = 0;
+
+    for(var c in connectedClients){
+      if(connectedClients[c].finished){
+        finished++;
+      }
     }
 
     // emit to all clients when all competitors have finished the race
-    if(competitorsFinished == readyLength){
+    if(finished == Object.keys(connectedClients).length){
       io.emit("all-finished")
     }
   })
 
   socket.on('results', function(){
+
+    // do this so you can return you to the person for name
+    connectedClients[socket.id].name = "You";
 
     var standing = []
 
@@ -112,6 +126,7 @@ io.on('connection', function(socket){
       var arr = [];
       arr.push(standing[i].name)
       arr.push(standing[i].points)
+      arr.push(standing[i].time)
       standingArray.push(arr);
     }
 
