@@ -117,18 +117,19 @@ io.on('connection', function(socket){
     connectedClients[socket.id].time = data.time;
     connectedClients[socket.id].finished = true;
 
-    var finished = 0;
+    // var finished = 0;
 
-    for(var c in connectedClients){
-      if(connectedClients[c].finished){
-        finished++;
-      }
-    }
+    // for(var c in connectedClients){
+    //   if(connectedClients[c].finished){
+    //     finished++;
+    //   }
+    // }
 
     // emit to all clients when all competitors have finished the race
-    if(finished == Object.keys(connectedClients).length){
-      io.emit("all-finished")
-    }
+    // if(finished == Object.keys(connectedClients).length){
+    //   io.emit("all-finished")
+    // }
+    socket.emit("all-finished");
   })
 
   socket.on('results', function(){
@@ -159,7 +160,7 @@ io.on('connection', function(socket){
       standingArray.push(arr);
     }
 
-    socket.emit("results", {"results":standingArray});
+    io.emit("results", {"results":standingArray});
   })
 
   socket.on('disconnect', function(){
