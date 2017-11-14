@@ -64,9 +64,9 @@ io.on('connection', function(socket){
       competitorArray.push(arr)
     }
 
-    if(competitorArray.length > 1){
-      io.emit('competitors',{"competitors":competitorArray});
-    }
+    
+    io.emit('competitors',{"competitors":competitorArray});
+    
     
     // var competitorNames = [];
 
