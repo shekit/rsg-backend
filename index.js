@@ -7,12 +7,13 @@ var io = require('socket.io')({transports:['websocket']});
 
 io.attach(4567);
 
-var DEVELOPMENT = true; // change this
-
 var connectedClients = {};
 
-if(DEVELOPMENT){
+if(process.env.NODE_ENV == "dev"){
+  console.log("DEV MODE");
   connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Enemy", ready: true, finished: true,points: 4000, time:"3:04", profile: "vader"}};
+} else {
+  console.log("PROD MODE");
 }
 
 var competitorsReady = 0;
