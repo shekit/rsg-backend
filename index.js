@@ -28,6 +28,7 @@ io.on('connection', function(socket){
   // connectedClients.push(clientObj);
   connectedClients[socket.id] = {};
   console.log("connected clients length", Object.keys(connectedClients).length);
+  socket.emit("connected");
 
   socket.on('name', function(data){
     console.log("RECEIVED NAME:", data.name);
