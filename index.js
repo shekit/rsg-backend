@@ -16,6 +16,7 @@ if(process.env.NODE_ENV == "dev"){
   console.log("PROD MODE");
 }
 
+var submitted = 0;
 var competitorsReady = 0;
 var competitorsFinished = 0;
 var profileImages = ["vader","spock","snoo","kylo","solo","kirk","yoda","luke","leia"]
@@ -31,21 +32,19 @@ io.on('connection', function(socket){
   socket.on('name', function(data){
     console.log("RECEIVED NAME:", data.name);
 
-    var imageIndex = 0;
 
-    if(Object.keys(connectedClients).length > profileImages.length){
-      imageIndex = 0;
-    } else {
-      imageIndex = Object.keys(connectedClients).length-1
-    }
+    if(submitted > profileImages.length){
+      submitted = 0;
+    } 
 
     var competitorObj = {
       name: data.name,
       ready: false,
       finished: false,
       points: 0,
-      profile: profileImages[imageIndex]
+      profile: profileImages[submitted]
     }
+    submitted++;
     connectedClients[socket.id] = competitorObj;
     console.log(connectedClients);
   })
@@ -166,6 +165,18 @@ io.on('connection', function(socket){
     //   return obj.id != socket.id;
     // })
     delete connectedClients[socket.id];
+
+    var competitorArray = []
+
+    for(var id in connectedClients){
+      var arr = []
+      arr.push(connectedClients[id].name)
+      arr.push(connectedClients[id].profile)
+      competitorArray.push(arr)
+    }
+
+    io.emit('competitors',{"competitors":competitorArray});
+    
     console.log("connected clients length", Object.keys(connectedClients).length)
     console.log("client disconnected", socket.id);
   })
