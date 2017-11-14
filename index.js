@@ -52,7 +52,7 @@ io.on('connection', function(socket){
   socket.on('competitors', function(){
     console.log("send competitors");
 
-    connectedClients[socket.id].name = "You";
+    //connectedClients[socket.id].name = "You";
 
     var competitorArray = []
 
@@ -132,7 +132,7 @@ io.on('connection', function(socket){
   socket.on('results', function(){
 
     // do this so you can return you to the person for name
-    connectedClients[socket.id].name = "You";
+    //connectedClients[socket.id].name = "You";
 
     var standing = []
 
