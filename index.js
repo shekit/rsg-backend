@@ -12,11 +12,12 @@ var DEVELOPMENT = true; // change this
 var connectedClients = {};
 
 if(DEVELOPMENT){
-  connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Enemy", ready: true, finished: true,points: 4000, time:"3:04"}};
+  connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Enemy", ready: true, finished: true,points: 4000, time:"3:04", profile: "vader"}};
 }
 
 var competitorsReady = 0;
 var competitorsFinished = 0;
+var profileImages = ["vader","spock","snoo","kylo","solo","kirk","yoda","luke","leia"]
 
 io.on('connection', function(socket){
   console.log("client connected", socket.id);
@@ -28,11 +29,21 @@ io.on('connection', function(socket){
 
   socket.on('name', function(data){
     console.log("RECEIVED NAME:", data.name);
+
+    var imageIndex = 0;
+
+    if(Object.keys(connectedClients).length > profileImages.length){
+      imageIndex = 0;
+    } else {
+      imageIndex = Object.keys(connectedClients).length-1
+    }
+
     var competitorObj = {
       name: data.name,
       ready: false,
       finished: false,
-      points: 0
+      points: 0,
+      profile: profileImages[imageIndex]
     }
     connectedClients[socket.id] = competitorObj;
     console.log(connectedClients);
@@ -40,18 +51,33 @@ io.on('connection', function(socket){
 
   socket.on('competitors', function(){
     console.log("send competitors");
-    
-    var competitorNames = [];
+
+    connectedClients[socket.id].name = "You";
+
+    var competitorArray = []
 
     for(var id in connectedClients){
-      if(id != socket.id){
-        competitorNames.push(connectedClients[id].name);
-      }
+      var arr = []
+      arr.push(connectedClients[id].name)
+      arr.push(connectedClients[id].profile)
+      competitorArray.push(arr)
     }
 
-    if(competitorNames.length > 0){
-      io.emit('competitors', {"competitors":competitorNames});
+    if(competitorArray.length > 1){
+      io.emit('competitors',{"competitors":competitorArray});
     }
+    
+    // var competitorNames = [];
+
+    // for(var id in connectedClients){
+    //   if(id != socket.id){
+    //     competitorNames.push(connectedClients[id].name);
+    //   }
+    // }
+
+    // if(competitorNames.length > 0){
+    //   io.emit('competitors', {"competitors":competitorNames});
+    // }
 
   })
 
@@ -127,6 +153,7 @@ io.on('connection', function(socket){
       arr.push(standing[i].name)
       arr.push(standing[i].points)
       arr.push(standing[i].time)
+      arr.push(standing[i].profile)
       standingArray.push(arr);
     }
 
