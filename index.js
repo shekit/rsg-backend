@@ -43,6 +43,7 @@ io.on('connection', function(socket){
       ready: false,
       finished: false,
       points: 0,
+      time: "DNF",
       profile: profileImages[submitted]
     }
     submitted++;
@@ -104,7 +105,7 @@ io.on('connection', function(socket){
     //   readyLength = Object.keys(connectedClients).length;
     // }
 
-    if(ready == Object.keys(connectedClients).length){
+    if(ready == Object.keys(connectedClients).length && ready>1){
       io.emit("start-race");
     } 
     
