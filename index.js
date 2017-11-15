@@ -7,11 +7,11 @@ var io = require('socket.io')({transports:['websocket']});
 
 io.attach(4567);
 
-var connectedClients = {};
+var connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Computer", ready: true, finished: true,points: 120, time:"0:25:3", profile: "data"}};
 
 if(process.env.NODE_ENV == "dev"){
   console.log("DEV MODE");
-  connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Computer", ready: true, finished: true,points: 300, time:"0:45:3", profile: "data"}};
+  connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Computer", ready: true, finished: true,points: 120, time:"0:25:3", profile: "data"}};
 } else {
   console.log("PROD MODE");
 }
