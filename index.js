@@ -11,7 +11,7 @@ var connectedClients = {};
 
 if(process.env.NODE_ENV == "dev"){
   console.log("DEV MODE");
-  connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Enemy", ready: true, finished: true,points: 4000, time:"3:04", profile: "vader"}};
+  connectedClients = {GM3oKGGQSqxL81ejAAAB:{name:"Computer", ready: true, finished: true,points: 300, time:"0:45:3", profile: "data"}};
 } else {
   console.log("PROD MODE");
 }
