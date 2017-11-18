@@ -120,9 +120,20 @@ io.on('connection', function(socket){
     socket.emit("all-finished");
   })
 
+  var timer = null;
+
   socket.on('ping', function(){
+    clearTimeout(timer)
+    timer = null
     socket.emit("pong")
+    disconnectClient()
   })
+
+  function disconnectClient(){
+    timer = setTimeout(function(),{
+      socket.disconnect()
+    },5000)
+  }
 
   socket.on('results', function(){
 
