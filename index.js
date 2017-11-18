@@ -132,6 +132,10 @@ io.on('connection', function(socket){
     socket.emit("all-finished");
   })
 
+  socket.on('ping', function(){
+    socket.emit("pong")
+  })
+
   socket.on('results', function(){
 
     // do this so you can return you to the person for name
