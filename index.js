@@ -132,7 +132,7 @@ io.on('connection', function(socket){
   function disconnectClient(){
     timer = setTimeout(function(){
       socket.disconnect()
-    },5000)
+    },12000)
   }
 
   socket.on('results', function(){
