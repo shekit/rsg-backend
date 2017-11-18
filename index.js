@@ -86,8 +86,6 @@ io.on('connection', function(socket){
   socket.on('ready', function(){
     connectedClients[socket.id].ready = true; 
 
-    //competitorsReady++;
-
     var ready = 0;
 
     for(var c in connectedClients){
@@ -96,20 +94,10 @@ io.on('connection', function(socket){
       }
     }
 
-    // var readyLength = 0;
-
-    // if(DEVELOPMENT){
-    //   readyLength = Object.keys(connectedClients).length-1;
-    //   console.log("READDYY")
-    // } else {
-    //   readyLength = Object.keys(connectedClients).length;
-    // }
-
     if(ready == Object.keys(connectedClients).length && ready>1){
       io.emit("start-race");
     } 
-    
-
+  
   })
 
   socket.on('finish', function(data){
@@ -185,6 +173,18 @@ io.on('connection', function(socket){
     }
 
     io.emit('competitors',{"competitors":competitorArray});
+
+    var ready = 0;
+
+    for(var c in connectedClients){
+      if(connectedClients[c].ready){
+        ready++;
+      }
+    }
+
+    if(ready == Object.keys(connectedClients).length && ready>1){
+      io.emit("start-race");
+    }
     
     console.log("connected clients length", Object.keys(connectedClients).length)
     console.log("client disconnected", socket.id);
